@@ -1,7 +1,6 @@
 {
   "name": "florist-server",
   "version": "1.0.0",
-  "description": "",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -17,5 +16,15 @@
     "express-fileupload": "^1.1.6",
     "mongoose": "^5.8.7",
     "uuid": "^7.0.2"
-  }
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/illiapelypenko/florist-server.git"
+  },
+  "bugs": {
+    "url": "https://github.com/illiapelypenko/florist-server/issues"
+  },
+  "homepage": "https://github.com/illiapelypenko/florist-server#readme",
+  "description": ""
 }
