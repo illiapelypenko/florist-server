@@ -45,24 +45,37 @@ router.delete('/delete/:id', async (req, res) => {
 router.post('/upload', async (req, res) => {
   try {
     const file = req.files.file;
+    const fileName = file.name;
+    const data = file.data;
+
     const name = req.body.name;
     const price = req.body.price;
-    const fileName = file.name;
     const type = req.body.type;
     const birthtimeMs = new Date().getTime();
-    const data = file.data;
-    let newItem = new Item({
-      name,
-      price,
-      data,
-      fileName,
-      type,
-      birthtimeMs,
+
+    const params = {
+      Bucket: 'florist-images',
+      Key: fileName, // File name you want to save as in S3
+      Body: data, // Buffer
+    };
+
+    s3.upload(params, async (err, data) => {
+      if (err) {
+        res.status(400).send('server error');
+        throw err;
+      }
+      let newItem = new Item({
+        name,
+        price,
+        location: data.Location,
+        fileName,
+        type,
+        birthtimeMs,
+      });
+
+      await newItem.save();
+      res.status(200).send();
     });
-
-    await newItem.save();
-
-    res.status(200).send();
   } catch (e) {
     res.status(400).send('server error');
     console.log(e);
