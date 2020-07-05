@@ -76,7 +76,7 @@ router.post('/upload-test', async (req, res) => {
     const data = file.data;
 
     const params = {
-      Bucket: S3_BUCKET,
+      Bucket: 'florist-images',
       Key: fileName, // File name you want to save as in S3
       Body: data, // Buffer
     };
