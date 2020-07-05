@@ -4,10 +4,7 @@ const fs = require('fs');
 const router = express.Router();
 const absolutePath = require('path');
 const AWS = require('aws-sdk');
-const s3 = new AWS.S3({
-  accessKeyId: AWS_ACCESS_KEY_ID,
-  secretAccessKey: AWS_SECRET_ACCESS_KEY,
-});
+const s3 = new AWS.S3();
 // const imagesStore = `${__dirname}/../items-images`;
 
 router.get('/all', async (req, res) => {
