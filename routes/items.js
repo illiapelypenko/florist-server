@@ -4,9 +4,10 @@ const fs = require('fs');
 const router = express.Router();
 const absolutePath = require('path');
 const AWS = require('aws-sdk');
-const accessKeyId = 'AKIAIGFNDLM2DI4KEZBQ';
-const secretAccessKey = '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';
-const s3 = new AWS.S3({ accessKeyId, secretAccessKey });
+const s3 = new AWS.S3({
+  accessKeyId: AWS_ACCESS_KEY_ID,
+  secretAccessKey: AWS_SECRET_ACCESS_KEY,
+});
 // const imagesStore = `${__dirname}/../items-images`;
 
 router.get('/all', async (req, res) => {
@@ -78,7 +79,7 @@ router.post('/upload-test', async (req, res) => {
     const data = file.data;
 
     const params = {
-      Bucket: 'florist-images',
+      Bucket: S3_BUCKET,
       Key: fileName, // File name you want to save as in S3
       Body: data, // Buffer
     };
