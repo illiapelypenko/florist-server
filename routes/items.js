@@ -1,48 +1,57 @@
-const express = require('express');
-const Item = require('../models/Item');
-const fs = require('fs');
+const express = require("express");
+const Item = require("../models/Item");
+const fs = require("fs");
 const router = express.Router();
-const absolutePath = require('path');
-const AWS = require('aws-sdk');
+const absolutePath = require("path");
+const AWS = require("aws-sdk");
 const s3 = new AWS.S3();
 // const imagesStore = `${__dirname}/../items-images`;
 
-router.get('/all', async (req, res) => {
+router.get("/all", async (req, res) => {
   try {
     let items = await Item.find();
     items = items
       .map((item) => {
-        return ({ _id, name, price, data, fileName, type, birthtimeMs } = item);
+        return ({
+          _id,
+          name,
+          price,
+          data,
+          fileName,
+          type,
+          birthtimeMs,
+          checked,
+        } = item);
       })
       .reverse();
     res.json(items);
   } catch (e) {
-    res.status(400).send('server error');
+    res.status(400).send("server error");
     console.log(e);
   }
 });
 
-router.get('/picture/:id', async (req, res) => {
+router.get("/picture/:id", async (req, res) => {
   try {
     const file = await Item.findOne({ _id: req.params.id });
-    res.status(200).end(file.data, 'binary');
+    res.status(200).end(file.data, "binary");
   } catch (e) {
-    res.status(400).send('server error');
+    res.status(400).send("server error");
     console.log(e);
   }
 });
 
-router.delete('/delete/:id', async (req, res) => {
+router.delete("/delete/:id", async (req, res) => {
   try {
     Item.deleteOne({ _id: req.params.id }, (err) => console.log);
     res.send();
   } catch (e) {
-    res.status(400).send('server error');
+    res.status(400).send("server error");
     console.log(e);
   }
 });
 
-router.post('/upload', async (req, res) => {
+router.post("/upload", async (req, res) => {
   try {
     const file = req.files.file;
     const fileName = file.name;
@@ -54,14 +63,14 @@ router.post('/upload', async (req, res) => {
     const birthtimeMs = new Date().getTime();
 
     const params = {
-      Bucket: 'florist-images',
+      Bucket: "florist-images",
       Key: fileName, // File name you want to save as in S3
       Body: data, // Buffer
     };
 
     s3.upload(params, async (err, data) => {
       if (err) {
-        res.status(400).send('server error');
+        res.status(400).send("server error");
         throw err;
       }
       let newItem = new Item({
@@ -77,19 +86,19 @@ router.post('/upload', async (req, res) => {
       res.status(200).send();
     });
   } catch (e) {
-    res.status(400).send('server error');
+    res.status(400).send("server error");
     console.log(e);
   }
 });
 
-router.post('/upload-test', async (req, res) => {
+router.post("/upload-test", async (req, res) => {
   try {
     const file = req.files.file;
     const fileName = file.name;
     const data = file.data;
 
     const params = {
-      Bucket: 'florist-images',
+      Bucket: "florist-images",
       Key: fileName, // File name you want to save as in S3
       Body: data, // Buffer
     };
@@ -102,7 +111,7 @@ router.post('/upload-test', async (req, res) => {
       res.status(200).send(data.Location);
     });
   } catch (e) {
-    res.status(400).send('server error');
+    res.status(400).send("server error");
     console.log(e);
   }
 });
